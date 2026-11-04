@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { categories } from '../data/criteria.js'
-import { plants } from '../data/plants.js'
-import { effectiveRating } from '../lib/scoring.js'
+import SceneGround from '../../../shared/components/SceneGround.vue'
+import { categories } from '../criteria.js'
+import { plants } from '../../../shared/art/plants.js'
+import { effectiveRating } from '../scoring.js'
 
 const props = defineProps({
   state: { type: Object, required: true },
@@ -63,10 +64,7 @@ const description = computed(() => {
       <circle r="26" :fill="result.core.every((c) => c.value === true) ? '#edb92e' : '#4a6a55'" class="transition-[fill] duration-500" />
     </g>
 
-    <path d="M0 196Q120 150 250 182T480 170V320H0Z" fill="#4c7f45" />
-    <path d="M0 232Q160 206 300 226T480 216V320H0Z" fill="#3f7a3a" />
-    <path d="M0 270Q140 256 280 268T480 262V320H0Z" fill="#5a4030" />
-    <path d="M0 304Q200 296 480 306V320H0Z" fill="#46311f" />
+    <SceneGround />
 
     <g v-for="slot in slots" :key="slot.id" :transform="`translate(${slot.x} ${slot.y})`">
       <g v-if="slot.stage === 0">

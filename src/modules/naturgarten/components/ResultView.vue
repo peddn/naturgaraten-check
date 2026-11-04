@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CRITERIA_VERSION } from '../data/criteria.js'
+import { CRITERIA_VERSION } from '../criteria.js'
 import SmileyMeter from './SmileyMeter.vue'
 
 const props = defineProps({

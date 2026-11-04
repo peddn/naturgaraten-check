@@ -3,7 +3,7 @@ import {
   REQUIRED_SMILEYS,
   allCoreCriteria,
   categories,
-} from '../data/criteria.js'
+} from './criteria.js'
 
 export function createEmptyState() {
   return {

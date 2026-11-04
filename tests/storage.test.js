@@ -1,18 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { createEmptyState } from '../src/lib/scoring.js'
+import { sanitizeState } from '../src/modules/naturgarten/sanitize.js'
+import { createEmptyState } from '../src/modules/naturgarten/scoring.js'
 import {
   exportFileName,
-  loadState,
+  loadAnswers,
   parseImport,
-  sanitizeState,
-  saveState,
+  saveAnswers,
   serializeExport,
-} from '../src/lib/storage.js'
+} from '../src/shared/storage.js'
 
 function memoryStorage() {
   const data = new Map()
   return { getItem: (k) => data.get(k) ?? null, setItem: (k, v) => data.set(k, v) }
 }
+
+const load = (storage) => loadAnswers('key', createEmptyState, sanitizeState, storage)
 
 describe('Browser-Speicher', () => {
   it('stellt gespeicherte Antworten wieder her', () => {
@@ -20,8 +22,8 @@ describe('Browser-Speicher', () => {
     const state = createEmptyState()
     state.ratings.blumen = 2
     state.core.torf = false
-    expect(saveState(state, storage)).toBe(true)
-    expect(loadState(storage)).toEqual(state)
+    expect(saveAnswers('key', state, storage)).toBe(true)
+    expect(load(storage)).toEqual(state)
   })
 
   it('startet leer, wenn der Speicher fehlt oder wirft', () => {
@@ -33,25 +35,24 @@ describe('Browser-Speicher', () => {
         throw new Error('blocked')
       },
     }
-    expect(loadState(broken)).toEqual(createEmptyState())
-    expect(saveState(createEmptyState(), broken)).toBe(false)
+    expect(load(broken)).toEqual(createEmptyState())
+    expect(saveAnswers('key', createEmptyState(), broken)).toBe(false)
   })
 
   it('startet leer bei beschädigten Daten', () => {
-    const storage = { getItem: () => '{kaputt', setItem() {} }
-    expect(loadState(storage)).toEqual(createEmptyState())
+    expect(load({ getItem: () => '{kaputt', setItem() {} })).toEqual(createEmptyState())
   })
 })
 
 describe('JSON-Export und -Import', () => {
-  it('überlebt einen kompletten Durchlauf', () => {
-    const state = createEmptyState()
-    state.gardenName = 'Bienenwiese'
-    state.notes = 'Teich anlegen'
-    state.usesBlowerOrRobot = true
-    state.ratings.regen = 1
-    state.core.duenger = true
-    expect(parseImport(serializeExport(state))).toEqual(state)
+  it('überlebt einen Durchlauf mit mehreren Modulen', () => {
+    const modules = { naturgarten: { gardenName: 'Bienenwiese' }, vogelgarten: { must: { insekten: true } } }
+    expect(parseImport(serializeExport(modules))).toEqual(modules)
+  })
+
+  it('liest Dateien aus der ersten Version', () => {
+    const text = JSON.stringify({ app: 'naturgarten-check', version: 1, garden: { gardenName: 'Alt' } })
+    expect(parseImport(text)).toEqual({ naturgarten: { gardenName: 'Alt' } })
   })
 
   it('lehnt ungültiges JSON ab', () => {
@@ -59,11 +60,11 @@ describe('JSON-Export und -Import', () => {
   })
 
   it('lehnt fremde Dateien ab', () => {
-    expect(() => parseImport('{"foo":1}')).toThrow('nicht aus dem Naturgarten-Check')
+    expect(() => parseImport('{"foo":1}')).toThrow('nicht aus dem Garten-Check')
   })
 
   it('lehnt unbekannte Formatversionen ab', () => {
-    const text = JSON.stringify({ app: 'naturgarten-check', version: 99, garden: {} })
+    const text = JSON.stringify({ app: 'naturgarten-check', version: 99, modules: {} })
     expect(() => parseImport(text)).toThrow('99')
   })
 
@@ -83,9 +84,7 @@ describe('JSON-Export und -Import', () => {
   })
 
   it('baut lesbare Dateinamen', () => {
-    expect(exportFileName({ gardenName: 'Süße Äpfel & Co.' })).toBe(
-      'naturgarten-check-suesse-aepfel-co.json',
-    )
-    expect(exportFileName({ gardenName: '' })).toBe('naturgarten-check.json')
+    expect(exportFileName('Süße Äpfel & Co.')).toBe('garten-check-suesse-aepfel-co.json')
+    expect(exportFileName('')).toBe('garten-check.json')
   })
 })

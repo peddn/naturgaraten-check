@@ -1,32 +1,59 @@
-# Naturgarten-Check
+# Garten-Check
 
-Selbstcheck für Gartenbesitzer: Wie nah ist der eigene Garten an der Plakette
-„Bayern blüht – Naturgarten“? Mit jeder Antwort wächst ein Gartenbild mit.
+Selbstchecks für ökologische Gartenauszeichnungen. Jede Zertifizierung ist ein eigenes Modul
+mit eigenen Kriterien, eigener Bewertung, eigenem Pinia-Store und eigenen Routen.
 
-Das ist kein offizielles Angebot und ersetzt keine Zertifizierung. Die Entscheidung
-treffen zwei Zertifizierer bei der Begehung vor Ort.
+Das ist kein offizielles Angebot. Die Checks ersetzen keine Bewertung vor Ort.
 
-## Bewertung
+## Module
 
-- Alle 4 Kernkriterien müssen erfüllt sein.
-- In beiden Kann-Kategorien sind mindestens 7 von 14 Smileys nötig.
-  Ein Kriterium bringt 1 Smiley (teilweise) oder 2 Smileys (voll erfüllt).
-- Wer Laubsauger oder Mähroboter nutzt, bekommt für Nützlingsunterkünfte keinen Smiley.
+| Modul | Route | Was es prüft | Grundlage |
+| --- | --- | --- | --- |
+| `naturgarten` | `#/naturgarten` | „Bayern blüht – Naturgarten“: 4 Kernkriterien und je Kategorie mindestens 7 Smileys | Bogen 2019, Kriterien März 2023 |
+| `vogelgarten` | `#/vogelgarten` | Vorprüfung „Vogelfreundlicher Garten“: 2 von 4 Muss-, keine Ausschlusskriterien | LBV-Anmeldeseite, LfU-Faltblatt |
+| `praemierung` | `#/praemierung` | Naturgartenprämierung, früher „Tausende Gärten – Tausende Arten“: Bronze und Grüne Oase | Quick-Check von 2023 |
 
-Grundlage sind der Zertifizierungsbogen (Stand 24.04.2019) und „Details zu den Kriterien“
-(Stand März 2023). Die Texte stehen gekürzt in `src/data/criteria.js`.
+Grenzen, die aus den Quellen folgen:
+
+- Der Kriterienkatalog des Vogelfreundlichen Gartens ist nicht öffentlich. Das Modul prüft nur die Anmeldung.
+- Die Bewertungsmatrix der Prämierung ist unveröffentlicht. Silber und Gold werden nicht berechnet,
+  die Grüne Oase gilt nur als möglich.
+- Seit 2026 führt NaturGarten e.V. die Prämierung durch. Dessen aktueller Quick-Check war nicht einsehbar.
+
+## Aufbau
+
+```
+src/
+  modules/
+    index.js          Liste aller Module
+    <modul>/
+      index.js        Beschreibung, Routen, Store
+      criteria.js     Kriterien
+      scoring.js      Bewertung ohne Vue, per Vitest getestet
+      store.js        Pinia-Store mit answers, result und summary
+      *View.vue       Oberfläche
+  shared/             Speicherung, Datenexport, Layout, Zeichnungen
+  router/             Hash-Routing aus der Modulliste
+  views/              Startseite
+```
+
+Für eine neue Zertifizierung legst du einen Ordner unter `src/modules/` an und trägst ihn in
+`src/modules/index.js` ein. Startseite, Navigation, Router und Datenexport nutzen diese Liste.
+
+Der Store muss `answers`, `saved`, `replace`, `reset` und `summary` bereitstellen.
+`usePersistedAnswers` liefert davon alles außer `summary`.
 
 ## Technik
 
-Vue 3, Vite und Tailwind CSS 4, keine Datenbank und kein Server. Die Antworten liegen im
-`localStorage` des Browsers und lassen sich als JSON-Datei exportieren und importieren.
-Die Schriften werden mit ausgeliefert, es gibt keine externen Anfragen.
+Vue 3, Vue Router, Pinia, Vite und Tailwind CSS 4, keine Datenbank und kein Server. Die Antworten
+liegen im `localStorage`. Der Export bündelt alle Module in einer JSON-Datei, Dateien der ersten
+Version lassen sich weiter importieren. Die Schriften werden mit ausgeliefert.
 
 ```sh
 npm install
 npm run dev      # Entwicklungsserver
-npm test         # Tests der Bewertungslogik und Speicherung
+npm test         # Tests
 npm run build    # Statischer Build in dist/
 ```
 
-Der Build nutzt relative Pfade und läuft daher auf jedem statischen Hosting.
+Relative Pfade und Hash-Routing erlauben jedes statische Hosting.

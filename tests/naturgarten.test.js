@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { allCoreCriteria, categories } from '../src/data/criteria.js'
-import { createEmptyState, evaluate, scoreCategory, suggestionsFor } from '../src/lib/scoring.js'
+import { allCoreCriteria, categories } from '../src/modules/naturgarten/criteria.js'
+import { createEmptyState, evaluate, scoreCategory, suggestionsFor } from '../src/modules/naturgarten/scoring.js'
 
 const [vielfalt, nutzgarten] = categories
 
