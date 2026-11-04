@@ -4,6 +4,7 @@ import { createEmptyState, evaluate, sanitizeState } from '../src/modules/praemi
 
 function bronzeState() {
   const state = createEmptyState()
+  state.native = 'wild'
   strictCriteria.forEach((c) => {
     state.strict[c.id] = true
   })
@@ -59,20 +60,39 @@ describe('Naturgartenprämierung', () => {
     expect(evaluate(state).status).toBe('missing')
   })
 
-  it('nennt mehrere Ausnahmen zugleich unklar', () => {
+  it('lässt für die Grüne Oase nur eine Ausnahme zu', () => {
     const state = bronzeState()
     state.counts.neophytes = 1
     state.counts.overseas = 1
-    expect(evaluate(state).status).toBe('unclear')
+    const result = evaluate(state)
+    expect(result.status).toBe('missing')
+    expect(result.tooManyExceptions).toBe(true)
+    expect(result.failed).toEqual([])
+  })
+
+  it('verlangt für Bronze Wildpflanzen, die Grüne Oase reicht mit heimischen Pflanzen', () => {
+    const state = bronzeState()
+    state.native = 'native'
+    expect(evaluate(state).status).toBe('oasis')
+    state.counts.overseas = 1
+    expect(evaluate(state).status).toBe('oasis')
+    state.native = 'none'
+    expect(evaluate(state).status).toBe('missing')
+  })
+
+  it('übernimmt ältere Antworten zu den Wildpflanzen', () => {
+    expect(sanitizeState({ strict: { native: true } }).native).toBe('wild')
+    expect(sanitizeState({ strict: { native: false } }).native).toBe('none')
   })
 
   it('verwirft ungültige Werte', () => {
     const state = sanitizeState({
-      strict: { native: 'ja', noPeat: true },
+      native: 'ja',
+      strict: { noPeat: true },
       counts: { overseas: 3, neophytes: 3 },
       biotopes: ['teich', 'fremd'],
     })
-    expect(state.strict.native).toBeNull()
+    expect(state.native).toBeNull()
     expect(state.strict.noPeat).toBe(true)
     expect(state.counts.overseas).toBeNull()
     expect(state.counts.neophytes).toBe(3)

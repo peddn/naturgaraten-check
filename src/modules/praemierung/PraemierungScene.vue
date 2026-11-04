@@ -19,6 +19,7 @@ const spots = {
   teich: { art: plants.lebensraum[1], x: 182, y: 214 },
   wiese: { art: plants.wiese[1], x: 316, y: 220 },
   sand: { art: sandArt, x: 412, y: 216 },
+  nisthilfen: { art: plants.nuetzlinge[1], x: 236, y: 288 },
   trockenmauer: { art: wallArt, x: 118, y: 288 },
   steinhaufen: { art: stoneArt, x: 352, y: 288 },
 }

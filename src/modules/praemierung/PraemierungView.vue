@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import ChoiceQuestion from '../../shared/components/ChoiceQuestion.vue'
 import ModuleLayout from '../../shared/components/ModuleLayout.vue'
 import ResultBox from '../../shared/components/ResultBox.vue'
-import { CRITERIA_VERSION, biotopes, countCriteria, strictCriteria, testerFocus } from './criteria.js'
+import { CRITERIA_VERSION, biotopes, countCriteria, nativeCriterion, strictCriteria, testerFocus } from './criteria.js'
 import PraemierungScene from './PraemierungScene.vue'
 import { usePraemierungStore } from './store.js'
 
@@ -12,12 +12,13 @@ const store = usePraemierungStore()
 const stateLabels = {
   ok: { text: 'Erfüllt', class: 'text-leaf' },
   exception: { text: 'Ausnahme', class: 'text-soil' },
+  oasisOnly: { text: 'Nur Oase', class: 'text-soil' },
   fail: { text: 'Fehlt', class: 'text-rosehip' },
   open: { text: 'Offen', class: 'text-fir-soft' },
 }
 
 const outcome = computed(() => {
-  const { status, failed, open, exceptions } = store.result
+  const { status, failed, open, exceptions, oasisOnly, tooManyExceptions } = store.result
   if (status === 'bronze') {
     return {
       tone: 'good',
@@ -29,14 +30,14 @@ const outcome = computed(() => {
     return {
       tone: 'good',
       title: 'Die Grüne Oase ist möglich.',
-      text: `Für Bronze reicht es wegen „${exceptions[0].title}“ nicht. Die Grüne Oase lässt das als Ausnahme zu, verlangt aber zusätzlich eine besonders gute Bewertung bei den Kann-Kriterien. Die sind nicht veröffentlicht.`,
+      text: `Für Bronze reicht es wegen „${[...oasisOnly, ...exceptions].map((item) => item.title).join('“ und „')}“ nicht. Die Grüne Oase lässt das zu, verlangt aber zusätzlich eine besonders gute Bewertung bei den Kann-Kriterien. Die sind nicht veröffentlicht.`,
     }
   }
-  if (status === 'unclear') {
+  if (status === 'missing' && tooManyExceptions && failed.length === 0) {
     return {
-      tone: 'open',
-      title: 'Hier hilft nur Nachfragen.',
-      text: `Bei dir greifen ${exceptions.length} Ausnahmen. Das Infoblatt lässt offen, ob mehrere zugleich für die Grüne Oase reichen.`,
+      tone: 'bad',
+      title: 'Das sind zu viele Ausnahmen.',
+      text: `Bei dir greifen ${exceptions.length}: ${exceptions.map((item) => item.title).join(', ')}. Der Quick-Check nennt die Ausnahmen für die Grüne Oase als Alternativen, es sollte also nur eine bleiben.`,
     }
   }
   if (status === 'missing') {
@@ -67,6 +68,11 @@ const outcome = computed(() => {
     <p class="mt-2 max-w-[60ch]">Für Bronze müssen alle voll erfüllt sein.</p>
     <div class="mt-7">
       <ChoiceQuestion
+        v-model="store.answers.native"
+        :criterion="nativeCriterion"
+        :options="nativeCriterion.options"
+      />
+      <ChoiceQuestion
         v-for="criterion in strictCriteria"
         :key="criterion.id"
         v-model="store.answers.strict[criterion.id]"
@@ -85,7 +91,7 @@ const outcome = computed(() => {
           <span class="mt-1 block">Welche gibt es bei dir? Du brauchst mindestens zwei.</span>
         </legend>
         <p class="mt-2 max-w-[68ch] text-base text-fir-soft">
-          Das Infoblatt nennt die Liste nur beispielhaft, andere Elemente können also ebenfalls zählen.
+          Der Quick-Check nennt nur Beispiele, andere Elemente können also ebenfalls zählen.
         </p>
         <div class="mt-3 grid gap-2 sm:grid-cols-2">
           <label
@@ -133,7 +139,7 @@ const outcome = computed(() => {
         Die Teilnahme kostet einmalig etwa 50 bis 60 € inklusive Schild. Die Seiten des Vereins nennen 48,15 € und 58 €, frag also vorher nach.
       </p>
       <p class="mt-2 text-base">
-        Grundlage dieses Checks ist der {{ CRITERIA_VERSION }}. Der aktuelle Quick-Check des Vereins könnte abweichen. Dieser Check ist kein offizielles Angebot und ersetzt keine Bewertung.
+        Grundlage dieses Checks ist der {{ CRITERIA_VERSION }}. Der Verein bittet, die Voraussetzungen genau zu prüfen, um unnötige Fahrten zu vermeiden. Dieser Check ist kein offizielles Angebot und ersetzt keine Bewertung.
       </p>
     </section>
   </ModuleLayout>

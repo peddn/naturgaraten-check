@@ -11,14 +11,14 @@ Das ist kein offizielles Angebot. Die Checks ersetzen keine Bewertung vor Ort.
 | --- | --- | --- | --- |
 | `naturgarten` | `#/naturgarten` | „Bayern blüht – Naturgarten“: 4 Kernkriterien und je Kategorie mindestens 7 Smileys | Bogen 2019, Kriterien März 2023 |
 | `vogelgarten` | `#/vogelgarten` | Vorprüfung „Vogelfreundlicher Garten“: 2 von 4 Muss-, keine Ausschlusskriterien | LBV-Anmeldeseite, LfU-Faltblatt |
-| `praemierung` | `#/praemierung` | Naturgartenprämierung, früher „Tausende Gärten – Tausende Arten“: Bronze und Grüne Oase | Quick-Check von 2023 |
+| `praemierung` | `#/praemierung` | Naturgartenprämierung, früher „Tausende Gärten – Tausende Arten“: Bronze und Grüne Oase | Aktueller Quick-Check von NaturGarten e.V. |
 
 Grenzen, die aus den Quellen folgen:
 
 - Der Kriterienkatalog des Vogelfreundlichen Gartens ist nicht öffentlich. Das Modul prüft nur die Anmeldung.
 - Die Bewertungsmatrix der Prämierung ist unveröffentlicht. Silber und Gold werden nicht berechnet,
   die Grüne Oase gilt nur als möglich.
-- Seit 2026 führt NaturGarten e.V. die Prämierung durch. Dessen aktueller Quick-Check war nicht einsehbar.
+- Die Kann-Kriterien der Grünen Oase sind nicht veröffentlicht. Für sie gilt höchstens eine Ausnahme.
 
 ## Aufbau
 

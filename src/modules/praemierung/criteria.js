@@ -1,22 +1,29 @@
 // Naturgartenprämierung, 2019 bis 2025 unter „Tausende Gärten – Tausende Arten“,
-// seit 2026 bei NaturGarten e.V. Grundlage: Quick-Check-Infoblatt vom 23.02.2023.
+// seit 2026 bei NaturGarten e.V. Grundlage: aktueller Quick-Check von NaturGarten e.V.
 // Die Bewertungsmatrix ist nicht veröffentlicht. Silber und Gold lassen sich nicht berechnen.
 
-export const CRITERIA_VERSION = 'Quick-Check von 2023'
+export const CRITERIA_VERSION = 'aktuelle Quick-Check von NaturGarten e.V.'
 export const REQUIRED_BIOTOPES = 2
 
+// Bronze verlangt heimische Wildpflanzen, die Grüne Oase nur heimische Pflanzen.
+export const nativeCriterion = {
+  id: 'native',
+  title: 'Mindestens 50 % heimische Pflanzen',
+  question: 'Was wächst auf mindestens der Hälfte deiner Fläche?',
+  hint: 'Bereiche mit Nutzpflanzen zählen nicht mit, Dachbegrünung schon. Ob eine Art heimisch ist, zeigt floraweb.de.',
+  options: [
+    { value: 'wild', label: 'Heimische Wildpflanzen', tone: 'good' },
+    { value: 'native', label: 'Heimische Pflanzen', tone: 'warn' },
+    { value: 'none', label: 'Beides nicht', tone: 'bad' },
+  ],
+}
+
 export const strictCriteria = [
-  {
-    id: 'native',
-    title: 'Mindestens 50 % heimische Wildpflanzen',
-    question: 'Wachsen heimische Wildpflanzen auf mindestens der Hälfte deiner Ziergartenfläche?',
-    hint: 'Bereiche mit Nutzpflanzen wie Gemüse zählen nicht mit. Ob eine Art heimisch ist, zeigt floraweb.de.',
-  },
   {
     id: 'animals',
     title: 'Tierwohl',
     question: 'Gibt es keine Tierfallen und möglichst wenig künstliches Licht?',
-    hint: 'Fallen sind zum Beispiel ungesicherte Lichtschächte, Teiche ohne Ausstieg oder oben offene Rohre.',
+    hint: 'Unbeabsichtigte Fallen können in Lichtschächten, Teichen oder nach oben offenen Rohren entstehen.',
   },
   {
     id: 'noPeat',
@@ -40,7 +47,7 @@ export const countCriteria = [
     id: 'neophytes',
     title: 'Invasive Neophyten',
     question: 'Wie viele Arten invasiver Neophyten wachsen bei dir?',
-    hint: 'Das sind gebietsfremde Pflanzen, die heimische Arten verdrängen. Das Infoblatt nennt als Beispiel den Flieder. Mehr steht im Neophyten-Handbuch von NaturGarten e.V.',
+    hint: 'Das sind gebietsfremde Pflanzen, die heimische Arten verdrängen und die Biodiversität schädigen. Der Quick-Check nennt als Beispiel den Flieder. Mehr steht im Neophyten-Handbuch von NaturGarten e.V.',
     limit: 2,
     options: [
       { value: 0, label: 'Keine', tone: 'good' },
@@ -79,6 +86,7 @@ export const biotopes = [
   { id: 'teich', label: 'Teich' },
   { id: 'wiese', label: 'Blumenwiese' },
   { id: 'trockenmauer', label: 'Trockenmauer' },
+  { id: 'nisthilfen', label: 'Nisthilfen' },
   { id: 'steinhaufen', label: 'Steinhaufen' },
 ]
 

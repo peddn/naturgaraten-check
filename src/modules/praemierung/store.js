@@ -16,13 +16,12 @@ export const usePraemierungStore = defineStore('praemierung', () => {
     const labels = {
       bronze: 'Mindestens Bronze möglich',
       oasis: 'Grüne Oase möglich',
-      unclear: 'Beim Verein nachfragen',
       missing: 'Es fehlt noch etwas',
       open: 'Noch offen',
     }
     const { status, biotopeCount } = result.value
     return {
-      status: status === 'bronze' || status === 'oasis' ? 'ready' : status === 'unclear' ? 'open' : status,
+      status: status === 'bronze' || status === 'oasis' ? 'ready' : status,
       label: labels[status],
       detail: `${biotopeCount} Biotopelemente`,
     }
