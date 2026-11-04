@@ -131,7 +131,7 @@ const stepForCore = (id) => (id === 'gesamteindruck' ? 3 : 0)
         und nenne deinen Ort und ob du Mitglied im Obst- und Gartenbauverein bist. Zwei Zertifizierer gehen dann mit dir durch den Garten.
       </p>
       <p class="mt-2 text-base">
-        Die Kosten lagen zuletzt bei 40 € für Vereinsmitglieder und 80 € für Nichtmitglieder (FAQ von 2021). Ob dein Landkreis teilnimmt und was aktuell gilt, erfährst du beim Kreisverband oder der Kreisfachberatung.
+        Die Zertifizierung kostet einen Beitrag, der für Vereinsmitglieder niedriger ist. Die aktuelle Höhe und ob dein Landkreis teilnimmt, erfährst du beim Kreisverband oder der Kreisfachberatung.
       </p>
       <p class="mt-2 text-base">
         Dieser Check ist kein offizielles Angebot und ersetzt keine Zertifizierung. Grundlage ist der Leitfaden, Stand {{ CRITERIA_VERSION }}.
