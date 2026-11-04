@@ -136,7 +136,7 @@ const outcome = computed(() => {
         Der Verein führt die Prämierung seit 2026 durch. Danach besichtigt ein geprüfter Tester deinen Garten und stuft ihn ein.
       </p>
       <p class="mt-2 text-base">
-        Die Teilnahme kostet einmalig etwa 50 bis 60 € inklusive Schild. Die Seiten des Vereins nennen 48,15 € und 58 €, frag also vorher nach.
+        Die Teilnahme kostet einen einmaligen Beitrag inklusive Schild. Die aktuelle Höhe erfährst du bei der Bewerbung.
       </p>
       <p class="mt-2 text-base">
         Grundlage dieses Checks ist der {{ CRITERIA_VERSION }}. Der Verein bittet, die Voraussetzungen genau zu prüfen, um unnötige Fahrten zu vermeiden. Dieser Check ist kein offizielles Angebot und ersetzt keine Bewertung.
