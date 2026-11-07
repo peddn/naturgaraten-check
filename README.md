@@ -13,6 +13,8 @@ Das ist kein offizielles Angebot. Die Checks ersetzen keine Bewertung vor Ort.
 | `vogelgarten` | `#/vogelgarten` | Vorprüfung „Vogelfreundlicher Garten“: 2 von 4 Muss-, keine Ausschlusskriterien | LBV-Anmeldeseite, LfU-Faltblatt |
 | `praemierung` | `#/praemierung` | Naturgartenprämierung, früher „Tausende Gärten – Tausende Arten“: Bronze und Grüne Oase | Aktueller Quick-Check von NaturGarten e.V. |
 
+Welche offiziellen Unterlagen hinter jedem Modul stehen und wie sie umgesetzt sind, steht in [`docs/module/`](docs/module/).
+
 Grenzen, die aus den Quellen folgen:
 
 - Der Kriterienkatalog des Vogelfreundlichen Gartens ist nicht öffentlich. Das Modul prüft nur die Anmeldung.
