@@ -40,6 +40,7 @@ export const allCoreCriteria = [...coreCriteria, overallCriterion]
 export const categories = [
   {
     id: 'vielfalt',
+    required: REQUIRED_SMILEYS,
     title: 'Naturgartenelemente',
     intro: 'Was wächst und lebt in deinem Garten?',
     criteria: [
@@ -103,6 +104,7 @@ export const categories = [
   },
   {
     id: 'nutzgarten',
+    required: REQUIRED_SMILEYS,
     title: 'Bewirtschaftung & Nutzgarten',
     intro: 'Wie gehst du mit deinem Garten um?',
     criteria: [

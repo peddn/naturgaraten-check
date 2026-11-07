@@ -3,10 +3,10 @@ import { computed, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ChoiceQuestion from '../../shared/components/ChoiceQuestion.vue'
 import ModuleLayout from '../../shared/components/ModuleLayout.vue'
-import CriterionRating from './components/CriterionRating.vue'
+import CriterionRating from '../../shared/components/CriterionRating.vue'
 import GardenScene from './components/GardenScene.vue'
 import ResultView from './components/ResultView.vue'
-import SmileyMeter from './components/SmileyMeter.vue'
+import PointMeter from '../../shared/components/PointMeter.vue'
 import { BLOWER_CONDITION_CRITERION, categories, coreCriteria, overallCriterion } from './criteria.js'
 import { isBlocked } from './scoring.js'
 import { useNaturgartenStore } from './store.js'
@@ -77,7 +77,7 @@ watch(step, async () => {
       <p class="mt-2 max-w-[60ch]">{{ current.intro }}</p>
 
       <div v-if="activeScore" class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-leaf">
-        <SmileyMeter :score="activeScore.score" :required="activeScore.required" />
+        <PointMeter :score="activeScore.score" :required="activeScore.required" />
         <span class="font-bold text-fir" aria-live="polite">{{ activeScore.score }} von mindestens {{ activeScore.required }} Smileys</span>
       </div>
 

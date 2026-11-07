@@ -7,43 +7,49 @@ Das ist kein offizielles Angebot. Die Checks ersetzen keine Bewertung vor Ort.
 
 ## Module
 
-| Modul | Route | Was es prüft | Grundlage |
-| --- | --- | --- | --- |
-| `naturgarten` | `#/naturgarten` | „Bayern blüht – Naturgarten“: 4 Kernkriterien und je Kategorie mindestens 7 Smileys | Bogen 2019, Kriterien März 2023 |
-| `vogelgarten` | `#/vogelgarten` | Vorprüfung „Vogelfreundlicher Garten“: 2 von 4 Muss-, keine Ausschlusskriterien | LBV-Anmeldeseite, LfU-Faltblatt |
-| `praemierung` | `#/praemierung` | Naturgartenprämierung, früher „Tausende Gärten – Tausende Arten“: Bronze und Grüne Oase | Aktueller Quick-Check von NaturGarten e.V. |
+Wer die App öffnet, wählt zuerst sein Bundesland und sieht dann die Angebote für dieses Land und
+die bundesweiten Angebote. Gibt es für ein Land kein eigenes Angebot, erscheint ein Hinweis.
 
-Welche offiziellen Unterlagen hinter jedem Modul stehen und wie sie umgesetzt sind, steht in [`docs/module/`](docs/module/).
-
-Grenzen, die aus den Quellen folgen:
-
-- Der Kriterienkatalog des Vogelfreundlichen Gartens ist nicht öffentlich. Das Modul prüft nur die Anmeldung.
-- Die Bewertungsmatrix der Prämierung ist unveröffentlicht. Silber und Gold werden nicht berechnet,
-  die Grüne Oase gilt nur als möglich.
-- Die Kann-Kriterien der Grünen Oase sind nicht veröffentlicht. Für sie gilt höchstens eine Ausnahme.
+Welche Module es gibt, für welche Länder sie gelten und nach welchen offiziellen Unterlagen sie
+gebaut sind, steht in [`docs/module/`](docs/module/).
 
 ## Aufbau
 
 ```
 src/
   modules/
-    index.js          Liste aller Module
+    index.js          Bindet alle Modulordner automatisch ein
     <modul>/
-      index.js        Beschreibung, Routen, Store
+      index.js        Titel, Gebiete, Routen, Store
       criteria.js     Kriterien
-      scoring.js      Bewertung ohne Vue, per Vitest getestet
+      scoring.js      Bewertung, per Vitest getestet
       store.js        Pinia-Store mit answers, result und summary
       *View.vue       Oberfläche
-  shared/             Speicherung, Datenexport, Layout, Zeichnungen
-  router/             Hash-Routing aus der Modulliste
-  views/              Startseite
+  shared/
+    engines/          Gemeinsame Bewertungsmuster: Stufen, Zählen, Vorprüfung
+    regions.js        Bundesländer und Zuordnung der Module
+    ...               Speicherung, Datenexport, Layout, Zeichnungen
+  router/             Hash-Routing
+  views/              Landesauswahl und Angebote eines Landes
+docs/module/          Quellen und Umsetzung je Modul
 ```
 
-Für eine neue Zertifizierung legst du einen Ordner unter `src/modules/` an und trägst ihn in
-`src/modules/index.js` ein. Startseite, Navigation, Router und Datenexport nutzen diese Liste.
+### Neues Modul
 
-Der Store muss `answers`, `saved`, `replace`, `reset` und `summary` bereitstellen.
-`usePersistedAnswers` liefert davon alles außer `summary`.
+1. Ordner unter `src/modules/` mit `index.js` anlegen. Er wird automatisch eingebunden.
+2. In `index.js` die Gebiete angeben: `regions: ['BW']` für ein Land, `['DE']` für bundesweit.
+   Lokale Angebote nennen den Ort in `regionNote`.
+3. Bewertung möglichst mit einem Muster aus `src/shared/engines/` umsetzen.
+   `createCheckStore` erzeugt dazu den Pinia-Store.
+4. Dokumentation unter `docs/module/<id>.md` anlegen.
+
+Jeder Store stellt `answers`, `saved`, `replace`, `reset` und `summary` bereit.
+
+| Muster | Regel | Genutzt von |
+| --- | --- | --- |
+| `tiered` (Stufen) | Kernkriterien und Kategorien mit 0 bis 2 Punkten je Kriterium, Mindestpunkte je Kategorie | Naturgarten |
+| `count` (Zählen) | Pflichtkriterien und mindestens N erfüllte Kriterien | |
+| `precheck` (Vorprüfung) | Mindestzahl an Musskriterien, keine Ausschlusskriterien | Vogelgarten |
 
 ## Technik
 
