@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { CRITERIA_VERSION } from '../criteria.js'
-import SmileyMeter from './SmileyMeter.vue'
+import PointMeter from '../../../shared/components/PointMeter.vue'
 
 const props = defineProps({
   result: { type: Object, required: true },
@@ -78,7 +78,7 @@ const stepForCore = (id) => (id === 'gesamteindruck' ? 3 : 0)
         <div v-for="category in result.categories" :key="category.id">
           <dt>{{ category.title }}</dt>
           <dd class="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-leaf">
-            <SmileyMeter :score="category.score" :required="category.required" />
+            <PointMeter :score="category.score" :required="category.required" />
             <span class="font-bold text-fir">
               {{ category.score }} von mindestens {{ category.required }}
               <span class="font-normal">({{ category.answered }} von {{ category.total }} bewertet)</span>

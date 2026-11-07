@@ -1,6 +1,7 @@
-import naturgarten from './naturgarten/index.js'
-import praemierung from './praemierung/index.js'
-import vogelgarten from './vogelgarten/index.js'
+// Jedes Modul unter src/modules/<id>/index.js wird automatisch eingebunden.
+// Reihenfolge: `order`, danach Titel.
+const found = import.meta.glob('./*/index.js', { eager: true, import: 'default' })
 
-// Neue Zertifizierungen werden nur hier eingetragen.
-export const modules = [naturgarten, vogelgarten, praemierung]
+export const modules = Object.values(found).sort(
+  (a, b) => (a.order ?? 100) - (b.order ?? 100) || a.title.localeCompare(b.title, 'de'),
+)

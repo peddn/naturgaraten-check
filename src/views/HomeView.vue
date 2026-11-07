@@ -1,61 +1,53 @@
 <script setup>
-import { computed } from 'vue'
-import { modules } from '../modules/index.js'
+import { useRouter } from 'vue-router'
 import ModuleLayout from '../shared/components/ModuleLayout.vue'
+import { states } from '../shared/regions.js'
+import { useRegionStore } from '../shared/regionStore.js'
 
-const entries = computed(() => modules.map((module) => ({ module, summary: module.useStore().summary })))
+const region = useRegionStore()
+const router = useRouter()
 
-const badge = {
-  ready: 'bg-leaf text-paper',
-  missing: 'bg-rosehip text-paper',
-  open: 'bg-lichen-deep text-fir',
-}
-
-const signs = computed(() =>
-  entries.value.map(({ module, summary }, index) => ({
-    id: module.id,
-    x: 96 + index * 144,
-    lit: summary.status === 'ready',
-  })),
-)
-const icons = {
-  naturgarten: 'M0 13V-3M0 4c-8 0-11-5-11-11 8 0 11 5 11 11Zm0-4c0-7 4-11 11-11 0 7-4 11-11 11Z',
-  vogelgarten: 'M-13 3Q-4-9 8-5L15-9l-3 8Q5 10-5 8ZM-9-1a6 6 0 1 1 .1 0Z',
-  praemierung: 'M0-13l4 8 9 1-6.5 6.5L8 12l-8-4-8 4 1.5-9.500L-13-4l9-1Z',
+function choose(state) {
+  region.code = state.code
+  router.push(`/land/${state.slug}`)
 }
 </script>
 
 <template>
   <ModuleLayout
     title="Welche Plakette passt zu deinem Garten?"
-    lead="Drei Auszeichnungen, drei Checks. Deine Antworten bleiben in deinem Browser."
+    lead="Wähle dein Bundesland. Dann siehst du, welche ökologischen Gartenauszeichnungen es dort gibt, und kannst deinen Garten selbst prüfen."
   >
     <template #scene>
-      <svg viewBox="0 0 480 320" class="block h-auto w-full lg:max-h-full" role="img" aria-label="Gartenzaun mit drei Plaketten">
+      <svg viewBox="0 0 480 320" class="block h-auto w-full lg:max-h-full" role="img" aria-label="Wegweiser im Garten">
         <path d="M0 232Q160 206 300 226T480 216V320H0Z" fill="#3f7a3a" />
         <path d="M0 270Q140 256 280 268T480 262V320H0Z" fill="#5a4030" />
-        <g fill="#b98d5e">
-          <path v-for="n in 13" :key="n" :d="`M${-8 + (n - 1) * 41} 278V146l11-14 11 14V278Z`" />
+        <rect x="232" y="96" width="14" height="168" rx="3" fill="#7a5639" />
+        <path d="M160 108h120l22 18-22 18H160Z" fill="#b98d5e" />
+        <path d="M318 154H198l-22 18 22 18h120Z" fill="#b98d5e" />
+        <path d="M172 200h112l20 16-20 16H172Z" fill="#b98d5e" />
+        <g fill="#5a4030">
+          <rect x="176" y="122" width="88" height="6" rx="3" />
+          <rect x="214" y="168" width="88" height="6" rx="3" />
+          <rect x="188" y="213" width="80" height="6" rx="3" />
         </g>
-        <path d="M0 170H480M0 244H480" stroke="#7a5639" stroke-width="10" />
-        <g v-for="sign in signs" :key="sign.id" :transform="`translate(${sign.x} 196)`">
-          <circle r="38" :fill="sign.lit ? '#edb92e' : '#2c5039'" stroke="#fbfdf4" stroke-width="4" class="transition-[fill] duration-500" />
-          <path :d="icons[sign.id]" transform="scale(1.7)" :fill="sign.lit ? '#1e3a2a' : '#a9cf6e'" />
-        </g>
+        <g transform="translate(96 250)"><circle r="6" fill="#edb92e" /><circle cy="-14" r="6" fill="#fbfdf4" /><path d="M0 0v24" stroke="#2c5039" stroke-width="2.5" /></g>
+        <g transform="translate(372 244)"><circle r="7" fill="#8d6bb5" /><path d="M0 0v28" stroke="#2c5039" stroke-width="2.5" /></g>
       </svg>
     </template>
 
-    <h2 class="mt-8 font-serif text-4xl font-bold leading-tight md:text-5xl">Wähle einen Check</h2>
-    <ul class="mt-6">
-      <li v-for="{ module, summary } in entries" :key="module.id" class="border-b-2 border-lichen-deep py-5 last:border-b-0">
-        <RouterLink :to="module.path" class="group block">
-          <span class="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span class="font-serif text-2xl font-bold leading-tight group-hover:underline">{{ module.title }}</span>
-            <span class="rounded-full px-3 text-base font-bold" :class="badge[summary.status]">{{ summary.label }}</span>
-          </span>
-          <span class="mt-1 block max-w-[60ch]">{{ module.description }}</span>
-          <span class="mt-1 block text-base text-fir-soft">{{ module.region }}. Dein Stand: {{ summary.detail }}.</span>
-        </RouterLink>
+    <h2 class="mt-8 font-serif text-4xl font-bold leading-tight md:text-5xl">Wo liegt dein Garten?</h2>
+    <ul class="mt-6 grid gap-2 sm:grid-cols-2">
+      <li v-for="state in states" :key="state.code">
+        <button
+          type="button"
+          class="w-full rounded-2xl border-2 px-4 py-2.5 text-left font-bold transition-colors"
+          :class="region.code === state.code ? 'border-fir bg-fir text-paper' : 'border-lichen-deep bg-paper hover:border-leaf'"
+          :aria-current="region.code === state.code ? 'true' : undefined"
+          @click="choose(state)"
+        >
+          {{ state.name }}
+        </button>
       </li>
     </ul>
     <p class="mt-6 max-w-[60ch] text-base text-fir-soft">

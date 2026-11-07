@@ -1,18 +1,20 @@
 <script setup>
 import { computed } from 'vue'
-import SmileyIcon from './SmileyIcon.vue'
+import PointIcon from './PointIcon.vue'
 
 const props = defineProps({
   criterion: { type: Object, required: true },
   modelValue: { type: Number, default: null },
   blocked: { type: Boolean, default: false },
+  shape: { type: String, default: 'smiley' },
+  labels: { type: Array, default: () => ['Noch nicht', 'Teilweise', 'Voll erfüllt'] },
 })
 defineEmits(['update:modelValue'])
 
 const levels = computed(() => [
-  { value: 0, title: 'Noch nicht', text: 'Das gibt es bei mir nicht.', smileys: 0 },
-  { value: 1, title: 'Teilweise', text: props.criterion.partial, smileys: 1 },
-  { value: 2, title: 'Voll erfüllt', text: props.criterion.full, smileys: 2 },
+  { value: 0, title: props.labels[0], text: 'Das gibt es bei mir nicht.', smileys: 0 },
+  { value: 1, title: props.labels[1], text: props.criterion.partial, smileys: 1 },
+  { value: 2, title: props.labels[2], text: props.criterion.full, smileys: 2 },
 ])
 </script>
 
@@ -45,7 +47,8 @@ const levels = computed(() => [
           @change="$emit('update:modelValue', level.value)"
         />
         <span class="flex h-6 w-11 shrink-0 items-center gap-0.5 text-[1.3rem] md:w-auto">
-          <SmileyIcon
+          <PointIcon
+            :shape="shape"
             v-for="n in level.smileys"
             :key="n"
             :class="modelValue === level.value ? 'text-pollen' : 'text-leaf'"
