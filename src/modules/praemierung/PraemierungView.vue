@@ -136,6 +136,9 @@ const outcome = computed(() => {
         Der Verein führt die Prämierung seit 2026 durch. Danach besichtigt ein geprüfter Tester deinen Garten und stuft ihn ein.
       </p>
       <p class="mt-2 text-base">
+        Frag vor der Bewerbung nach, ob in deiner Region Tester verfügbar sind. Die Bundesförderung von „Tausende Gärten – Tausende Arten“ war bis November 2025 angelegt.
+      </p>
+      <p class="mt-2 text-base">
         Die Teilnahme kostet einen einmaligen Beitrag inklusive Schild. Die aktuelle Höhe erfährst du bei der Bewerbung.
       </p>
       <p class="mt-2 text-base">
